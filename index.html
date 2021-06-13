@@ -1,0 +1,126 @@
+<head>
+	<script src="math_utils.js"></script>
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+
+<select onchange="showDiv(this)" size="1" id="math_functions">
+ <option value="">Select a function</option>
+ <option value="gcd">GCD of 2 Numbers</option>
+ <option value="lcm">LCM of 2 Numbers</option>
+ <option value="factors">Factors of N</option>
+ <option value="natural_sum">Sum of First N Integers</option>
+ <option value="simplify_fraction">Fraction Simplifier</option>
+ <option value="primality_test">Primality Test</option>
+ <option value="factorial">Factorial Calculator</option>
+ <option value="bivariate_solver">2 Variable System Solver</option>
+ <option value="trivariate_solver">3 Variable System Solver</option>
+</select>
+
+<br>
+<br>
+
+
+<div class="calculator" id="gcd" style="display: none">
+	A: <input type="number" id="gcd_input_a" value="1">
+	<br>
+	<br>
+	B: <input type="number" id="gcd_input_b" value="1">
+	<br>
+	<br>
+	<button type="button" onclick="parse_gcd()">Solve!</button>
+	<p id="gcd_answer"></p>
+</div>
+
+
+<div class="calculator" id="lcm" style="display: none">
+	A: <input type="number" id="lcm_input_a" value="1">
+	<br>
+	<br>
+	B: <input type="number" id="lcm_input_b" value="1">
+	<br>
+	<br>
+	<button type="button" onclick="parse_lcm()">Solve!</button>
+	<p id="lcm_answer"></p>
+</div>
+
+<div class="calculator" id="factors" style="display: none">
+	A: <input type="number" id="factors_input" value="1">
+	<br>
+	<br>
+	<button type="button" onclick="parse_factors()">Get Factors!</button>
+	<p id="factors_answer"></p>
+</div>
+
+
+<div class="calculator" id="natural_sum" style="display: none">
+	f(<input type="number" id="natural_sum_input" value="0">)   = <span id="natural_sum_answer"></span>
+	<br>
+	<br>
+	<button type="button" onclick="parse_natural_sum()">Solve!</button>
+</div>
+
+
+<div class="calculator" id="simplify_fraction" style="display: none">
+	<input type="number" id="numerator" value="1"> / <input type="number" id="denominator" value="1"> =
+	<span id="simplified_numerator"></span> <span id="simplified_denominator"></span>
+	<br>
+	<br>
+	<button type="button" onclick="parse_simplify_fraction()">Simplify!</button>
+</div>
+
+<div class="calculator" id="primality_test" style="display: none">
+	<input type="number" id="primality_test_input" value="2"> 
+	<br>
+	<br>
+	<button type="button" onclick="parse_primality_test()">Solve!</button>
+	<p id="primality_test_answer"></span>
+</div>
+
+
+<div class="calculator" id="factorial" style="display: none">
+	<input type="number" id="factorial_input" value="0">!   = <span id="factorial_answer"></span>
+	<br>
+	<br>
+	<button type="button" onclick="parse_factorial()">Solve!</button>
+</div>
+
+
+<div class="calculator"id="bivariate_solver" style="display: none">
+	<input type="number" id="bx1" value="0"> x + 
+	<input type="number" id="by1" value="0"> y = 
+	<input type="number" id="bs1" value="0"> 
+	<br>
+	<br>
+	<input type="number" id="bx2" value="0"> x + 
+	<input type="number" id="by2" value="0"> y = 
+	<input type="number" id="bs2" value="0"> 
+	<br>
+	<br>
+	<button type="button" onclick="parse_solver_inputs(false)">Solve!</button>
+	<p id="bivariate_answer"></p>
+</div>
+
+
+<div class="calculator"id="trivariate_solver" style="display: none;">
+	<input type="number" id="tx1" value="0"> x +  
+	<input type="number" id="ty1" value="0"> y + 
+	<input type="number" id="tz1" value="0"> z = 
+	<input type="number" id="ts1" value="0">
+	<br>
+	<br>
+	<input type="number" id="tx2" value="0"> x + 
+	<input type="number" id="ty2" value="0"> y + 
+	<input type="number" id="tz2" value="0"> z = 
+	<input type="number" id="ts2" value="0">
+	<br>
+	<br>
+	<input type="number" id="tx3" value="0"> x + 
+	<input type="number" id="ty3" value="0"> y + 
+	<input type="number" id="tz3" value="0"> z = 
+	<input type="number" id="ts3" value="0">
+	<br>
+	<br>
+	<button type="button" onclick="parse_solver_inputs(true)">Solve!</button>
+	<p id="trivariate_answer"></p>
+</div>

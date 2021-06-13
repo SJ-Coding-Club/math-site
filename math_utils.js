@@ -1,16 +1,19 @@
-// suite of functions that solve math problems we will add to the site
 /**
+ * This is a suite of functions that solve math problems we will add to the site.
+ * Right now, it's just a bunch of solvers and calculators, but we can also add practice problems 
+ * to the site, where random numbers are generated with a hidden solution using these functions,
+ * and the user has to solve it and input the right solution.
+ * 
  * I know younger students haven't gotten to stuff like matrix 
  * elimination, derivatives, integrals, etc., but just contribute
  * whatever you feel comfortable, no matter how simple you may think it is,
  * as it all helps.
  * 
+ * 
  * Functions to add:
  * - Convert Decimal to simplified Fraction
  * - Summation function
- * - System of equations solver (Matrix fun)
  * - Definite integrals
- * - Derivative at a point
  * 
  * Currently Added:
  * - Greatest common denominator
@@ -22,12 +25,18 @@
  * - Helper binary search function to add numbers to an array in order as the array 
  *   grows (might remove this, read below).
  * - factorial of n
+ * - Derivative of f(x) at x
+ * - matrix functions
+ * - solve system of equations with 2 and 3 variables
+ * 
+ * Additionally, some of these functions have been implemented abstractly 
+ * but not yet added to the site.
  */
 
 
 // Returns greatest common factor of integers a and b
 function gcd(a, b) {
-	if (a % b == 0)
+	if (b == 0 || a % b == 0)
 		return b;
 	var remainder = a % b;
 	return gcd(b, remainder);
@@ -119,4 +128,346 @@ function factorial(n) {
 	if (n == 0)
 		return 1;
 	return n * factorial(n - 1);
+}
+
+
+// function root_finder(a, b, c) { 
+// 	var d = Math.sqrt(b*b - 4 * a * c);
+// 	if (d < 0)
+// 		return "No real roots"
+// 	return [(-b + d) / (2 * a), (-b - d) / (2 * a)]
+// }
+
+// function root_formatter(a, b, c) {
+// 	var roots = root_finder(a,b,c);
+// 	if (Arrays.isArray((roots)))
+// 		do_thing
+// 	return roots;
+// }
+
+
+
+// calculate d/dx of f at x using the definition of the derivative as a limit. 
+function derivativeAtX(f, x) {
+	var h = 0.0000001;
+	return (f(x + h) - f(x)) / h;
+}
+
+
+
+
+// rounds n to places decimal places, default = 2
+function round(n, places=2) {
+	return Math.round(Math.pow(10, places) * n) / Math.pow(10, places);
+}
+
+
+
+
+
+
+// matrix stuff, should be separated into its own class
+// all of its a bit of a mess right now, can definitely improve it tho
+
+
+
+// general function for adding/subtracting matrices to reduce code written
+function matrix_add_subtract(a, b, isAdding) {
+	if (a.length != b.length || a[0].length != b[0].length)
+		throw "Matrices must be the same dimensions"
+	var c = [];
+	for (var i = 0; i < a.length; i++) {
+		c.push([]);
+		for (var j = 0; j < a[0].length; j++) {
+			if (!isAdding)
+				c[i][j] = a[i][j] + b[i][j];
+			else
+				c[i][j] = a[i][j] + b[i][j];
+		}
+	}
+	return c;	
+}
+
+// adds two matrices together
+function add_matrices(a, b) {
+	return matrix_add_subtract(a, b, true);
+}
+
+// subtract one matrix from another
+function subtract_matrices(a, b) {
+	return matrix_add_subtract(a, b, false);
+}
+
+// checks that one matrix equals another
+function matrices_are_identical(a, b) {
+	if (!Array.isArray(a) || !Array.isArray(b) || a.length != b.length)
+		return "A and B must be two m x n matrices"
+	for (var i = 0; i < a.length; i++) 
+		for (var j = 0; j < a[i].length; j++)
+			if (a[i][j] != b[i][j])
+				return false;
+	return true;
+}
+
+// multiplying matrices algorithm, yeah i know it's O(n^3) but we can improve it later
+function multiply_matrices(a, b) {
+	if (!Array.isArray(a) || !Array.isArray(b))
+		throw "A and B must be m x n and n x p matrices"
+	if (a[0].length != b.length)
+		throw "Number of columns of matrix A must be equal to number of rows of matrix B"
+	var c = [];
+	// if A is a m x n matrix, B will be n x p matrix. Product C will be m x p matrix
+	for (var i = 0; i < a.length; i++) {
+		c.push([]);
+		for (var j = 0; j < b[0].length; j++) {
+		  var dot_product = 0;
+		  for (var k = 0; k < b.length; k++) {
+		    dot_product += a[i][k] * b[k][j];
+		  }
+			c[i].push(dot_product);
+		}
+	}
+	return c;
+}
+
+function multiply_matrix_by_scalar(a, c) {
+	for (var i = 0; i < a.length; i++) {
+		for (var j = 0; j < a[i].length; j++) {
+			a[i][j] *= c;
+		}
+	}
+	return a;
+}
+
+// swaps two rows
+function swap_rows(matrix, r1_index, r2_index) {
+	var t = matrix[r1_index];
+	matrix[r1_index] = matrix[r2_index];
+	matrix[r2_index] = t;
+	return matrix;
+}
+
+// generates identity matrix
+function identity_matrix(n) {
+	var matrix = [];
+	for (var i = 0; i < n; i++) {
+		matrix.push(new Array(n).fill(0));
+		matrix[i][i] = 1;
+	}
+	return matrix;
+}
+
+// hard coded function to find minors for 3x3
+function matrix_of_minors_for_3x3(m) {
+	if (m.length != 3 || m[0].length != 3)
+		throw "Matrix must be 3x3"
+	return [
+		[m[1][1]*m[2][2] - m[1][2]*m[2][1], m[1][0]*m[2][2] - m[1][2]*m[2][0], m[1][0]*m[2][1] - m[1][1]*m[2][0]],
+		[m[0][1]*m[2][2] - m[0][2]*m[2][1], m[0][0]*m[2][2] - m[2][0]*m[0][2], m[0][0]*m[2][1] - m[2][0]*m[0][1]],
+		[m[0][1]*m[1][2] - m[0][2]*m[1][1], m[0][0]*m[1][2] - m[0][2]*m[1][0], m[0][0]*m[1][1] - m[0][1]*m[1][0]]
+	];
+}
+
+function cofactors(matrix) {
+	for (var i = 0; i < matrix.length; i++) {
+		for (var j = 0; j < matrix[i].length; j++) {
+			matrix[i][j] *= Math.pow(-1, i + j);
+		}
+	}
+	return matrix;
+}
+
+function det_2x2(matrix) {
+	return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+}
+
+function det_3x3(m) {
+
+	return m[0][0] * det_2x2([
+			[m[1][1], m[1][2]],
+			[m[2][1], m[2][2]]]) - m[0][1] *
+		det_2x2([
+			[m[1][0], m[1][2]],
+			[m[2][0], m[2][2]]]) + m[0][2] *
+		det_2x2([
+			[m[1][0], m[1][1]],
+			[m[2][0], m[2][1]]])
+
+}
+
+function transpose(matrix) {
+  var rows = matrix.length;
+  var cols = matrix[0].length;
+  new_matrix = []
+  for (var i = 0; i < cols; i++) {
+    new_matrix.push([]);
+    for (var j = 0; j < rows; j++) {
+      new_matrix[i].push(matrix[j][i]);
+    }
+  }
+  return new_matrix;
+}
+
+
+// hardcoded method for finding inverse of matrix 
+function matrix_inverse(matrix) {
+	var len = matrix.length;
+	if (len != matrix[0].length)
+		throw "Must be a square matrix"
+	if (len == 2) {
+		var a = matrix[0][0];
+		var b = matrix[0][1];
+		var c = matrix[1][0];
+		var d = matrix[1][1];
+		var det = a * d - b * c;
+		if (det == 0)
+			throw "Inverse matrix does not exist: zero determinate"
+		return multiply_matrix_by_scalar([[d, -b], [-c, a]], 1 / det);
+	} 
+	else if (len == 3) { // using minors, cofactors, and adjugate
+		var minors = matrix_of_minors_for_3x3(matrix);
+		minors = cofactors(minors);
+		minors = transpose(minors);
+		var det = det_3x3(matrix);
+		if (det == 0)
+			throw "Inverse matrix does not exist: zero determinate";
+		minors = multiply_matrix_by_scalar(minors, 1 / det);
+		return minors
+	}
+
+	else {
+		id_matrix = identity_matrix(len);
+		// implement better strategy
+		// https://www.mathsisfun.com/algebra/matrix-inverse-row-operations-gauss-jordan.html
+	}
+
+}
+
+// matrix received in form of the coefficients of system
+// from: https://www.mathsisfun.com/algebra/systems-linear-equations-matrices.html
+// Example:
+//  x +  y +  z =  6
+//      2y + 5z = -4
+// 2x + 5y -  z = 27
+// becomes:
+// [ 1  1  1 ] [x]   [  6 ]
+// [ 0  2  5 ] [y] = [ -4 ]
+// [ 2  5 -1 ] [z]   [ 27 ]
+// Can be written as AX = B
+// Then X = (A^-1)B
+
+ 
+function system_solver(coef_matrix, right_matrix) {
+	var inv_matrix = matrix_inverse(coef_matrix);
+	var solution = multiply_matrices(inv_matrix, right_matrix);
+	for (var i = 0; i < solution.length; i++) {
+		solution[i][0] = round(solution[i], 8);
+	}
+	return solution; // clean this up
+}
+
+
+function checkNoVSInfinitelyMany(x1, s1, x2, s2) {
+	if (gcd(x1, x2) == gcd(s1, s2))
+		return "Infinitely Many Solutions";
+	else
+		return "No Solution";
+}
+
+
+
+
+
+// scripts to interact with html / DOM stuff
+
+
+function val(id) {
+	return parseFloat(document.getElementById(id).value);
+}
+
+function parse_gcd() {
+	document.getElementById('gcd_answer').innerHTML = gcd(val("gcd_input_a"), val("gcd_input_b"));
+}
+
+function parse_lcm() {
+	document.getElementById('lcm_answer').innerHTML = lcm(val("lcm_input_a"), val("lcm_input_b"));
+}
+
+function parse_factors() {
+	document.getElementById('factors_answer').innerHTML = get_factors(val("factors_input")).join(", ");
+}
+
+function parse_natural_sum() {
+	document.getElementById('natural_sum_answer').innerHTML = natural_sum(val("natural_sum_input"));	
+}
+
+function parse_primality_test() {
+	var primality = is_prime(val("primality_test_input"));
+	document.getElementById('primality_test_answer').innerHTML = primality ? "Prime" : "Not Prime"; 
+}
+
+
+function parse_simplify_fraction() {
+	var simplified = simplify_fraction(val("numerator"), val("denominator"));
+	document.getElementById('simplified_numerator').innerHTML = simplified[0] + " / ";
+	document.getElementById('simplified_denominator').innerHTML = simplified[1];
+}
+
+
+function parse_factorial() {
+	document.getElementById('factorial_answer').innerHTML = factorial(val("factorial_input"));
+}
+
+
+function parse_solver_inputs(isTrivariate) {
+
+	if (isTrivariate) {
+		var coefficient_matrix = [
+			[val("tx1"), val("ty1"), val("tz1")],
+			[val("tx2"), val("ty2"), val("tz2")],
+			[val("tx3"), val("ty3"), val("tz3")]];
+		var right_matrix = [
+			[val("ts1")], [val("ts2")], [val("ts3")]
+		];
+		var solution_message;
+		try {
+			var solution = system_solver(coefficient_matrix, right_matrix);
+			solution_message = "x = " + solution[0][0] + "<br> y = " + solution[1][0] + "<br> z = " + solution[2][0];
+		}
+		catch(zeroDeterminantError) {
+			solution_message = checkNoVSInfinitelyMany(val("tx1"), val("ts1"), val("tx2"), val("ts2"))
+		}
+		document.getElementById('trivariate_answer').innerHTML = solution_message;
+
+	}
+	else {
+		var coefficient_matrix = [
+			[val("bx1"), val("by1")],
+			[val("bx2"), val("by2")]
+		];
+		var right_matrix = [
+			[val("bs1")], [val("bs2")]
+		];
+		var solution_message;
+		try {
+			var solution = system_solver(coefficient_matrix, right_matrix);
+			solution_message = "x = " + solution[0][0] + "<br> y = " + solution[1][0];
+		}
+		catch(zeroDeterminantError) {
+			solution_message = checkNoVSInfinitelyMany(val("bx1"), val("bs1"), val("bx2"), val("bs2"))
+		}
+		document.getElementById('bivariate_answer').innerHTML = solution_message;
+
+	}
+}
+
+// shows selected div, hides unselected ones
+function showDiv(selection) {
+	document.getElementById(selection.value).style.display = 'block';
+	var functions = document.getElementById('math_functions');
+	for (i = 1; i < functions.length; i++) {
+		if (functions[i].value != selection.value) {
+			document.getElementById(functions[i].value).style.display = 'none';
+		} 
+	}
 }

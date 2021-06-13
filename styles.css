@@ -1,0 +1,23 @@
+.calculator {
+  font-family: monospace;
+  /*font-size: 20px;*/
+}
+
+.calculator p {
+  font-size: 15px;
+}
+
+.calculator button {
+  /*font-family: monospace;*/
+}
+
+
+input {
+	width: 40px;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
