@@ -180,7 +180,7 @@ function matrix_add_subtract(a, b, isAdding) {
 		c.push([]);
 		for (var j = 0; j < a[0].length; j++) {
 			if (!isAdding)
-				c[i][j] = a[i][j] + b[i][j];
+				c[i][j] = a[i][j] - b[i][j];
 			else
 				c[i][j] = a[i][j] + b[i][j];
 		}
@@ -277,22 +277,29 @@ function cofactors(matrix) {
 	return matrix;
 }
 
-function det_2x2(matrix) {
-	return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
-}
-
-function det_3x3(m) {
-
-	return m[0][0] * det_2x2([
-			[m[1][1], m[1][2]],
-			[m[2][1], m[2][2]]]) - m[0][1] *
-		det_2x2([
-			[m[1][0], m[1][2]],
-			[m[2][0], m[2][2]]]) + m[0][2] *
-		det_2x2([
-			[m[1][0], m[1][1]],
-			[m[2][0], m[2][1]]])
-
+// general determinant calculation using Laplace expansion
+function determinant(matrix) {
+	if (matrix.length == 1) {
+		return matrix[0][0];
+	}
+	var det = 0;
+	for (var i = 0; i < matrix[0].length; i++) {
+	  var subIndex = 0;
+		var subMatrix = [];
+		for (var j = 1; j < matrix.length; j++) {
+			subMatrix.push([])
+			for (var k = 0; k < matrix[j].length; k++) {
+				if (k == i) {
+					continue;
+				}
+				subMatrix[subIndex].push(matrix[j][k]);
+			}
+			subIndex++;
+		}
+		var factor = i % 2 == 0 ? 1 : -1;
+		det += factor * matrix[0][i] * determinant(subMatrix);
+	}
+	return det;
 }
 
 function transpose(matrix) {
@@ -328,7 +335,7 @@ function matrix_inverse(matrix) {
 		var minors = matrix_of_minors_for_3x3(matrix);
 		minors = cofactors(minors);
 		minors = transpose(minors);
-		var det = det_3x3(matrix);
+		var det = determinant(matrix);
 		if (det == 0)
 			throw "Inverse matrix does not exist: zero determinate";
 		minors = multiply_matrix_by_scalar(minors, 1 / det);
