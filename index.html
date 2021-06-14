@@ -3,8 +3,10 @@
 	<link rel="stylesheet" href="styles.css">
 </head>
 
+<body class="bg">
 
-<select onchange="showDiv(this)" size="1" id="math_functions">
+<div class="box">
+<select onchange="showDiv(this)" size="1" id="math_functions" class="selector">
  <option value="">Select a function</option>
  <option value="gcd">GCD of 2 Numbers</option>
  <option value="lcm">LCM of 2 Numbers</option>
@@ -15,11 +17,14 @@
  <option value="factorial">Factorial Calculator</option>
  <option value="bivariate_solver">2 Variable System Solver</option>
  <option value="trivariate_solver">3 Variable System Solver</option>
+ <option value="slope_intercept">Slope Intercept Form Generator</option>
 </select>
+</div>
 
 <br>
 <br>
 
+<div class="calcBox">
 
 <div class="calculator" id="gcd" style="display: none">
 	A: <input type="number" id="gcd_input_a" value="1">
@@ -103,6 +108,8 @@
 
 
 <div class="calculator"id="trivariate_solver" style="display: none;">
+	<br>
+	<br>
 	<input type="number" id="tx1" value="0"> x +  
 	<input type="number" id="ty1" value="0"> y + 
 	<input type="number" id="tz1" value="0"> z = 
@@ -124,3 +131,18 @@
 	<button type="button" onclick="parse_solver_inputs(true)">Solve!</button>
 	<p id="trivariate_answer"></p>
 </div>
+
+<div class="calculator" id="slope_intercept" style="display: none">
+	Coord 1: <input type="number" id="ax" value="1"> <input type="number" id="ay" value="1">
+	<br>
+	<br>
+	Coord 2: <input type="number" id="bx" value="1"> <input type="number" id="by" value="1">
+	<br>
+	<br>
+	<button type="button" onclick="parse_slope_intercept()">Generate!</button>
+	<p id="slope_intercept_answer"></p>
+</div>
+
+</div>
+
+</body>

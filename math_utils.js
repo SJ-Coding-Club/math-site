@@ -374,8 +374,32 @@ function checkNoVSInfinitelyMany(x1, s1, x2, s2) {
 		return "No Solution";
 }
 
+/*
 
+SLOPE INTERCEPT FORM GENERATOR
+Returns a slope intercept form equation of a line from 2 coordinates
 
+*/
+
+function slopeInterceptFormGenerator(a, b) {
+	let ax = a[0];
+	let ay = a[1];
+	let bx = b[0];
+	let by = b[1];
+	let rise = by - ay;
+	let run = bx - ax;
+	let slope = simplify_fraction(rise, run);
+	rise = slope[0];
+	run = slope[1];
+	let slopeFraction = `${rise}/${run}`; // Don't want to use decimals
+	let slopeDecimal = rise / run; // To use to get the y intercept
+	if (slopeDecimal % 1 == 0) slopeFraction = slopeDecimal; // To stop things like "1/1" or "6/3" when they could be whole numbers
+	if (slopeFraction == 1) slopeFraction = ""; // To stop "1x"
+	let yIntercept = ay - (slopeDecimal * ax);
+	if (yIntercept == 0) yIntercept = "";
+	else yIntercept = ` + ${yIntercept}`; // To stop "+ 0"
+	return `y = ${slopeFraction}x${yIntercept}`;
+}
 
 
 // scripts to interact with html / DOM stuff
@@ -470,4 +494,8 @@ function showDiv(selection) {
 			document.getElementById(functions[i].value).style.display = 'none';
 		} 
 	}
+}
+
+function parse_slope_intercept() {
+	document.getElementById('slope_intercept_answer').innerHTML = slopeInterceptFormGenerator([val("ax"), val("ay")], [val("bx"), val("by")]);
 }
