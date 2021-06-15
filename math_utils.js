@@ -405,7 +405,12 @@ function slopeInterceptFormGenerator(a, b) {
 	let yIntercept = ay - (slopeDecimal * ax);
 	if (yIntercept == 0) yIntercept = "";
 	else yIntercept = ` + ${yIntercept}`; // To stop "+ 0"
-	return `y = ${slopeFraction}x${yIntercept}`;
+	let final = `y = ${slopeFraction}x${yIntercept}`;
+	if (slopeDecimal == 0) {
+		if (yIntercept.includes("+")) final = `y = ${yIntercept.slice(3)}`;
+		else final = `y = 0`;
+	}
+	return final;
 }
 
 
